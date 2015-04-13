@@ -1,0 +1,62 @@
+.step(data-title='Implementing the Login Flow', data-file='Controllers/ManageController.cs', data-highlight='')
+  :markdown
+    ## Implementing the Login Flow
+
+    When you generate a new project for ASP.NET MVC, a lot of the front-end code and controller logic is generated for you. The project combines jQuery, [Bootstrap](http://getbootstrap.com/), and [Modernizr](http://modernizr.com/) along with C# code at the controller level to create a fully baked user management system.
+
+    At a high level, our 2FA login flow will look like this:
+
+    ![2FA Flow Chart](//s3.amazonaws.com/howtodocs/2fa-flow.png)
+
+    Let's step through this login flow to see what's happening at each step.
+.step(data-title="The Login Form", data-file='Views/Account/Login.cshtml', data-highlight="17-30", data-language="htmlembedded")
+  :markdown
+    ## The Login Form
+
+    ![2FA Flow Chart Step 2](//s3.amazonaws.com/howtodocs/2fa-flow2.png)
+
+    On this login form, the user will attempt to validate the first "factor" of their identity, which is a password they already know. The user will enter their e-mail address and password in this form, and will send it to our server for validation.
+
+    Let's check out the code that handles this form submission next.
+
+.step(data-title="Validating the E-Mail and Password", data-file='Controllers/AccountController.cs', data-highlight="66-92")
+  :markdown
+    ## Validating the E-Mail and Password
+
+    ![2FA Flow Chart Step 3](//s3.amazonaws.com/howtodocs/2fa-flow3.png)
+
+    On the server, we receive the e-mail address and password the user entered on the [view model](http://blogs.msdn.com/b/rickandy/archive/2011/01/28/dynamic-v-strongly-typed-views.aspx) and asynchronoously check to see if they are valid.  If the e-mail and password combination match (and the user has two-factor authentication enabled), we will receive a `SignInStatus.RequiresVerification` result.  From there, we redirect to the `SendCode` action in this same controller.
+
+    This will display a form that will allow the user to select a 2FA provider from a drop-down list. In this example, Authy is the only choice. When the user submits this form, our `AuthyTokenProvider` class will take over and send the verification code via SMS.
+
+.step(data-title="Entering the Verification Code", data-file='Views/Account/VerifyCode.cshtml', data-highlight="15-20", data-language="htmlembedded")
+  :markdown
+    ## Entering the Verification Code
+
+    ![2FA Flow Chart Step 7](//s3.amazonaws.com/howtodocs/2fa-flow7.png)
+
+    Once the code is sent, we display a form for the user to enter the one-time password that was sent to them via SMS.
+
+.step(data-title="Validating the Code", data-file='Controllers/AccountController.cs', data-highlight="109-135")
+  :markdown
+    ## Validating the Code
+
+    ![2FA Flow Chart Step 8](//s3.amazonaws.com/howtodocs/2fa-flow8.png)
+
+    On the server, we use the `SignInManager` once again to validate the 2FA code that was entered by the user on the form. This will, eventually, use the `ValidateAsync` method on our `AuthyTokenProvider` class we saw earlier.  If the code is valid, we're all set with an authenticated session!
+
+.step(data-title="Accessing Protected Resources", data-file='Controllers/ManageController.cs', data-highlight="13-16")
+  :markdown
+    ## Accessing Protected Resources
+
+    ![2FA Flow Chart Step 10](//s3.amazonaws.com/howtodocs/2fa-flow10.png)
+
+    Now that we have an authenticated session, we can annotate other controllers in our application with `[Authorize]` to make sure an authenticated user only is allowed to see these items. Identity / Entity Framework also have finer-grained access controls you can use as well.
+
+.step(data-title="All Done!", data-file='Controllers/ManageController.cs')
+  :markdown
+    ## All Done!
+
+    And with just a bit of code to integrate Authy, our ASP.NET MVC application can now take advantage of high-level features Authy provides like a native 2FA app, user management and health checking, and much more.
+
+    We hope you found this tutorial useful - if you have any questions or feedback, please let us know! Send a note to [docs@twilio.com](mailto:docs@twilio.com) to say hi.

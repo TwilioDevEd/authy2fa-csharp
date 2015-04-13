@@ -1,0 +1,28 @@
+.step(data-title='Updating the User Model', data-file='Models/IdentityModels.cs', data-highlight='10-12')
+  :markdown
+    ## Updating the User Model
+
+    The Identity system has a few persistent Entity Framework models that contain profile information about the user. We can use these largely unchanged, but there is one extra bit of data we need to track about the user - an Authy user ID. We use this ID for Authy API requests to send 2FA validation tokens and to verify the tokens they input during the login process.
+
+    We're using [code first migrations](http://www.asp.net/mvc/overview/getting-started/getting-started-with-ef-using-mvc/migrations-and-deployment-with-the-entity-framework-in-an-asp-net-mvc-application) in this project, so we declare a new `string` property on the User model to contain their Authy ID, which we will populate later.
+
+    When running this project locally, you would need to open the Package Manager console and enter the `Enable-Migrations` command first. You can update the database with the migrations generated for this model already with the `Update-Database` command in the package manager console.  This migration should exist already if you downloaded the project from GitHub
+
+    That's all we need to change at the model level, but we're not done configuring the Identity system yet.  Let's see how we configure Authy as the 2FA provider for our application..
+.step(data-title="Register Authy as a 2FA Provider", data-file='App_Start/IdentityConfig.cs', data-highlight="77-78")
+  :markdown
+    ## Application Configuration
+
+    If you haven't already, now is the time to [sign up for Authy](https://dashboard.authy.com/signup). Create your first application, naming it whatever you wish. After you create your application, your "production" API key will be visible on your [dashboard](https://dashboard.authy.com):
+
+    ![Authy Dashboard](//s3.amazonaws.com/howtodocs/2fa-authy-dashboard.png)
+
+    You'll use this production key inside your `Web.config` file at the root of your web application project. Look for the `AuthyKey` property in this file, and change it to contain your Authy production key.  
+
+    ## Note 
+    If you were to download or clone this application project, you would need to rename `Web.config.sample` to `Web.config` so that file would be used in your project.
+
+    ## Dependencies
+    We're using mostly standard MVC namespaces for this project type with one notable exception - we're also using [the Authy.Net NuGet package](https://www.nuget.org/packages/Authy.Net/) to make interacting with the Authy APIs a bit simpler. This package can be installed from the package manager UI within Visual Studio.
+
+    Now that we understand how our project is configured, let's take a look at how we need to configure the Identity system to use Authy as a 2FA provider.
