@@ -11,18 +11,33 @@
     That's all we need to change at the model level, but we're not done configuring the Identity system yet.  Let's see how we configure Authy as the 2FA provider for our application..
 .step(data-title="Register Authy as a 2FA Provider", data-file='App_Start/IdentityConfig.cs', data-highlight="77-78")
   :markdown
-    ## Application Configuration
+    ## Register Authy as a 2FA Provider
 
-    If you haven't already, now is the time to [sign up for Authy](https://dashboard.authy.com/signup). Create your first application, naming it whatever you wish. After you create your application, your "production" API key will be visible on your [dashboard](https://dashboard.authy.com):
+    `IdentityConfig.cs` is the primary configuration file for the Identity system in our application. In this file, you can configure everything from password strength requirements to 2FA providers, which we do in these two lines of code here.
 
-    ![Authy Dashboard](//s3.amazonaws.com/howtodocs/2fa-authy-dashboard.png)
+    Explaining the features of Identity namespace is not something we'll be able to do justice to in this tutorial, so if you'd like to learn more about how Identity is configured, token providers, and the other specifics of the API, you might consider these resources from Microsoft:
 
-    You'll use this production key inside your `Web.config` file at the root of your web application project. Look for the `AuthyKey` property in this file, and change it to contain your Authy production key.  
+    * [Getting Started with Identity](http://www.asp.net/identity)
+    * [Identity Namespace API docs](https://msdn.microsoft.com/en-us/library/microsoft.aspnet.identity(v=vs.108).aspx)
 
-    ## Note 
-    If you were to download or clone this application project, you would need to rename `Web.config.sample` to `Web.config` so that file would be used in your project.
+    Let's take a brief look at the `AuthyTokenProvider` class to see what it needs to do to function as a 2FA provider for our application.
 
-    ## Dependencies
-    We're using mostly standard MVC namespaces for this project type with one notable exception - we're also using [the Authy.Net NuGet package](https://www.nuget.org/packages/Authy.Net/) to make interacting with the Authy APIs a bit simpler. This package can be installed from the package manager UI within Visual Studio.
+.step(data-title="The Authy 2FA Provider", data-file='AuthyProvider/AuthyProvider.cs')
+  :markdown
+    ## The Authy 2FA Provider
 
-    Now that we understand how our project is configured, let's take a look at how we need to configure the Identity system to use Authy as a 2FA provider.
+    In this file, we create the `AuthyProvider` namespace, which contains a `AuthyTokenProvider` class. This class [is used by ASP.NET Identity](http://www.asp.net/identity/overview/features-api/two-factor-authentication-using-sms-and-email-with-aspnet-identity#reg) to both send a verification token to a device, and to verify the token that was sent.
+
+    The two key methods to note here are `NotifyAsync` and `ValidateAsync`. These methods use the Authy client to send a one-time password and validate a one-time password, respectively.  Each depends on being provided with an Identity user class with a persistent `AuthyId` string property, which we created on the model earlier.
+
+    Now that we've made it possible to use Authy for 2FA, let's see how a user would opt in to using 2FA in the first place.
+
+.step(data-title="Enabling Two-Factor Authentication", data-file='Controllers/ManageController.cs', data-highlight="114-134")
+  :markdown
+    ## Enabling Two-Factor Authentication for a User
+
+    In the default setup for an ASP.NET MVC app using Identity for authentication, a user must sign up first, and then elect to enable two-factor authentication after creating an account. To use Authy for 2FA, we need to add an [Authy User](https://docs.authy.com/#section-Enabling_two-factor_on_a_user) for them associated with the phone number they enter.
+
+    This is the controller method that handles adding the phone number for the 2FA step. We've added code here to use the Authy API client to create a new Authy user, and to store their Authy user ID on the Identity model in our database. Now the user account in our database is tied to an Authy user, so we can verify any one-time password codes sent to the user.
+
+    Now that our user has elected 2FA for login, let's step through the actual login flow.

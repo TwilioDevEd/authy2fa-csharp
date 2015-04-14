@@ -30,31 +30,3 @@
     We're using mostly standard MVC namespaces for this project type with one notable exception - we're also using [the Authy.Net NuGet package](https://www.nuget.org/packages/Authy.Net/) to make interacting with the Authy APIs a bit simpler. This package can be installed from the package manager UI within Visual Studio.
 
     Now that we understand how our project is configured, let's take a look at how we need to configure the Identity system to use Authy as a 2FA provider.
-
-
-.step(data-title='Configuring Authy', data-file='config/initializers/authy.rb', data-highlight='')
-  :markdown
-    ## Configuring Authy
-
-    If you haven't already, now is the time to [sign up for Authy](https://dashboard.authy.com/signup). Create your first application, naming it whatever you wish. After you create your application, your "production" API key will be visible on your [dashboard](https://dashboard.authy.com):
-
-    ![Authy Dashboard](//s3.amazonaws.com/howtodocs/2fa-authy-dashboard.png)
-
-    Once we have an Authy API key, we store it in this [initializer file](http://guides.rubyonrails.org/configuring.html). Rather than storing it as a string, we pull it in from a system environment variable in the `ENV` hash. This prevents us from accidentally checking this sensitive value into source control.
-
-    Now that we've configured our Rails app, let's take a look at the domain model we'll need to create our user login system.
-
-.step(data-title='The Login System', data-file='db/schema.rb', data-highlight='')
-  :markdown
-    ## What Goes Into a Login System?
-
-    Authentication and authorization are some of the trickiest concepts to get right in a web application, and implementations vary quite a bit from application to application. But generally speaking, every login system has two concepts to implement:
-
-    * `User` : An individual person using the system
-    * `Session` : A series of authenticated interations a user has with the system
-
-    Our application implements an ActiveRecord model object for the user, and will use an HTTP session to track login status.
-
-    Our `User` model has a name, e-mail address, phone number, and a hashed password to compare against user-entered passwords during the login step. It also has an "Authy ID" which will associate our ActiveRecord user model with an Authy API user. Creating this association lets us use Authy to send our user 2FA verification codes, and verify user-entered one-time passwords.
-
-    Next, let's take a look at how to actually implement 2FA in our application, starting with the creation of user accounts.
