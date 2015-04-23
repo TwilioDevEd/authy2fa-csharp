@@ -1,0 +1,32 @@
+.step(data-title='How it Works', data-file='Authy2FA/Models/IdentityModels.cs', data-highlight='')
+  :markdown
+    ## How It Works
+
+    Adding two-factor authentication (2FA) to your web application can help increase the security of your user's data. [Multi-factor authentication](http://en.wikipedia.org/wiki/Multi-factor_authentication) determines the identity of a user by validating one or more of the following "factors":
+
+    * _Knowledge Factors_ (Something a user knows, like a password)
+    * _Posession Factors_ (Something a user has, like a mobile phone)
+    * _Inheritance Factors_ (Something a user is, like a person with a unique finger print)
+
+    We're about to walk you through a sample application that implements a simple login system with a _knowledge factor_ and a _posession factor_. For the knowledge factor, we will use a standard username/password system. For the possession factor, we will validate that the user has their mobile phone by sending them a one-time passcode in a text message [sent with Authy via Twilio](http://www.authy.com/). Here's how this works at a high level:
+
+    ![2FA High Level](//s3.amazonaws.com/howtodocs/2fa-high-level.png)
+
+    Now it's time to look at some code! We'll begin by understanding the moving parts of this example ASP.NET MVC application before diving into the actual implementation of the login flow.
+.step(data-title="Application Configuration", data-file='Authy2FA/Web.config.sample', data-mode='xml', data-highlight="14-20")
+  :markdown
+    ## Application Configuration
+
+    If you haven't already, now is the time to [sign up for Authy](https://dashboard.authy.com/signup). Create your first application, naming it whatever you wish. After you create your application, your "production" API key will be visible on your [dashboard](https://dashboard.authy.com):
+
+    ![Authy Dashboard](//s3.amazonaws.com/howtodocs/2fa-authy-dashboard.png)
+
+    You'll use this production key inside your `Web.config` file at the root of your web application project. Look for the `AuthyKey` property in this file, and change it to contain your Authy production key.  
+
+    ## Note 
+    If you were to download or clone this application project, you would need to rename `Web.config.sample` to `Web.config` so that file would be used in your project.
+
+    ## Dependencies
+    We're using mostly standard MVC namespaces for this project type with one notable exception - we're also using [the Authy.Net NuGet package](https://www.nuget.org/packages/Authy.Net/) to make interacting with the Authy APIs a bit simpler. This package can be installed from the package manager UI within Visual Studio.
+
+    Now that we understand how our project is configured, let's take a look at how we need to configure the Identity system to use Authy as a 2FA provider.
