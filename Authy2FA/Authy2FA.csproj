@@ -39,8 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Authy.Net">
-      <HintPath>..\packages\Authy.Net.1.0.0.12\lib\net40\Authy.Net.dll</HintPath>
+    <Reference Include="Authy.Net, Version=1.1.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Authy.Net.1.1.0.3\lib\net40\Authy.Net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
