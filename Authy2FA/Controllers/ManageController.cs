@@ -127,7 +127,7 @@ namespace Authy2FA.Controllers
                 user.AuthyId = result.UserId;
                 await UserManager.UpdateAsync(user);
 
-                _authyClient.SendSms(user.AuthyId, true);
+                _authyClient.SendSms(user.AuthyId);
             }
 
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });

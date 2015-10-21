@@ -51,7 +51,7 @@ namespace AuthyProvider
             }
 
             var client = new AuthyClient(authyKey, false);
-            client.SendSms(FindAuthyId(user), true);
+            client.SendSms(FindAuthyId(user));
 
             return Task.FromResult(0);
         }
