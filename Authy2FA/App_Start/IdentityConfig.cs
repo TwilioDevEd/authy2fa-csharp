@@ -87,6 +87,16 @@ namespace Authy2FA
             }
             return manager;
         }
+
+        public ApplicationUser FindByAuthyId(string authyId)
+        {
+            return Users.FirstOrDefault(x => x.AuthyId == authyId);
+        }
+
+        public Task<ApplicationUser> FindByAuthyIdAsync(string authyId)
+        {
+            return Users.FirstOrDefaultAsync(x => x.AuthyId == authyId);
+        }
     }
 
     // Configure the application sign-in manager which is used in this application.
