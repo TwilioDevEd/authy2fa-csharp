@@ -50,7 +50,7 @@ namespace AuthyProvider
                 throw new ArgumentNullException("manager");
             }
 
-            var client = new AuthyClient(authyKey, false);
+            var client = new AuthyClient(authyKey);
             client.SendSms(FindAuthyId(user));
 
             return Task.FromResult(0);
@@ -60,7 +60,7 @@ namespace AuthyProvider
         {
             if (user != null)
             {
-                var client = new AuthyClient(authyKey, false);
+                var client = new AuthyClient(authyKey);
                 var result = client.VerifyToken(FindAuthyId(user), token, true);
 
                 if (result.Status == AuthyStatus.Success)
