@@ -164,8 +164,11 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="AuthyProvider\AuthyProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AuthyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Domain\Authy\OneTouch.cs" />
+    <Compile Include="Domain\Authy\SendApprovalRequestResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -173,8 +176,13 @@
     <Compile Include="Migrations\201502251700440_AuthyId.Designer.cs">
       <DependentUpon>201502251700440_AuthyId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201510221537007_AddAuthyStatusToUsers.cs" />
+    <Compile Include="Migrations\201510221537007_AddAuthyStatusToUsers.Designer.cs">
+      <DependentUpon>201510221537007_AddAuthyStatusToUsers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AAuthyStatus.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -240,6 +248,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Authy\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -251,6 +260,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201502251700440_AuthyId.resx">
       <DependentUpon>201502251700440_AuthyId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510221537007_AddAuthyStatusToUsers.resx">
+      <DependentUpon>201510221537007_AddAuthyStatusToUsers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
