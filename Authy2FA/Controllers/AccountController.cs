@@ -135,6 +135,14 @@ namespace Authy2FA.Controllers
         }
 
         //
+        // GET: /Account/VerifyOneTouch
+        [AllowAnonymous]
+        public ActionResult VerifyOneTouch(string provider, string returnurl, bool rememberme)
+        {
+            return View();
+        }
+
+        //
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -315,8 +323,16 @@ namespace Authy2FA.Controllers
                 return View("Error");
             }
 
-            return RedirectToAction("VerifyCode",
-                new {Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe});
+            if (model.SelectedProvider.Equals("Authy Token"))
+            {
+                return RedirectToAction("VerifyCode",
+                    new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            }
+            else
+            {
+                return RedirectToAction("VerifyOneTouch",
+                    new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            }
         }
 
         //
@@ -483,5 +499,6 @@ namespace Authy2FA.Controllers
             }
         }
         #endregion
+
     }
 }

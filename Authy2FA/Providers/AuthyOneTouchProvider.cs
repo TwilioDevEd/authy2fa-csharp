@@ -58,11 +58,8 @@ namespace Authy2FA.Providers
 
         public async Task<bool> ValidateAsync(string purpose, string token, UserManager<TUser, TKey> manager, TUser user)
         {
-            if (user == null) return false;
-            var client = new AuthyClient(_authyKey);
-            var result = client.VerifyToken(FindAuthyId(user), token, true);
-
-            return result.Status == AuthyStatus.Success;
+            // This method relies on the validation made by Authy/Callback
+            return user != null;
         }
 
         private string FindAuthyId(TUser user)

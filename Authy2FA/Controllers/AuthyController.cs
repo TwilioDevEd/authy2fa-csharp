@@ -1,10 +1,18 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Authy.Net;
 using Authy2FA.Models;
 using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using WebGrease.Css.Extensions;
 
 namespace Authy2FA.Controllers
 {
@@ -34,6 +42,11 @@ namespace Authy2FA.Controllers
         // ReSharper disable once InconsistentNaming
         public async Task<ActionResult> Callback(string authy_id, string status)
         {
+            if (!AuthenticateAuthyRequest())
+            {
+                throw new Exception("Harmful request");
+            }
+
             var user = await UserManager.FindByAuthyIdAsync(authy_id);
             user.AuthyStatus = status;
             await UserManager.UpdateAsync(user);
@@ -42,13 +55,39 @@ namespace Authy2FA.Controllers
         }
 
         //
-        // GET: Authy/OneTouchStatus
-        public ActionResult OneTouchStatus()
+        // POST: Authy/OneTouchStatus
+        [HttpPost]
+        public async Task<ActionResult> OneTouchStatus()
         {
-            // TODO: Figure out when the user approved the OneTouch request.
-            // TODO: Validate with the API what are the values returned.
-            // status = user.AuthyStatus
-            return Content("status");
+            var user = await GetPartiallyLoggedUser();
+            if (user == null)
+            {
+                throw new Exception("User is either not authenticated or already logged in");
+            }
+
+            var status = user.AuthyStatus;
+            if (status == "denied")
+            {
+                user.AuthyStatus = string.Empty;
+                await UserManager.UpdateAsync(user);
+
+                return Content(status);
+            }
+
+            if (status == "approved")
+            {
+                var result = await SignInManager.TwoFactorSignInAsync("Authy One Touch", string.Empty, isPersistent: false, rememberBrowser: false);
+                if (result == SignInStatus.Success)
+                {
+                    user.AuthyStatus = string.Empty;
+                    await UserManager.UpdateAsync(user);
+                }
+
+                return Content(status);
+            }
+
+            return Content(status);
+
         }
 
         //
@@ -71,5 +110,21 @@ namespace Authy2FA.Controllers
             var userId = await SignInManager.GetVerifiedUserIdAsync();
             return await UserManager.FindByIdAsync(userId);
         }
+
+        private bool AuthenticateAuthyRequest()
+        {
+            return true;
+        }
+
+        private JObject Sort(JObject jObject)
+        {
+            var properties =  jObject.Properties().ToList().OrderBy(p => p.Name);
+
+            var result = new JObject();
+            properties.ForEach(property => result.Add(property.Name, property.Value));
+
+            return result;
+        }
+
     }
 }
