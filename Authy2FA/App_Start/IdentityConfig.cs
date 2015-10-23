@@ -11,7 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Authy2FA.Models;
-using AuthyProvider;
+using Authy2FA.Providers;
 
 namespace Authy2FA
 {
