@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Authy2FA.Domain.Authy
 {
-    public class OneTouch
+    public class OneTouchClient
     {
         private readonly string _apiKey;
         private readonly string _userId;
@@ -18,7 +18,7 @@ namespace Authy2FA.Domain.Authy
         /// </summary>
         /// <param name="apiKey">The api key used to access the rest api</param>
         /// <param name="userId">The user id used to send approval request</param>
-        public OneTouch(string apiKey, string userId)
+        public OneTouchClient(string apiKey, string userId)
         {
             _apiKey = apiKey;
             _userId = userId;

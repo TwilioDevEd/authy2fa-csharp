@@ -13,7 +13,7 @@ namespace Authy2FA.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201510221537007_AddAuthyStatusToUsers"; }
+            get { return "201510231423169_AddAuthyStatusToUsers"; }
         }
         
         string IMigrationMetadata.Source

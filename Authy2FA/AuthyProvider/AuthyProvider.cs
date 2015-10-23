@@ -6,6 +6,8 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.ModelBinding;
+using Authy2FA.Domain.Authy;
 
 namespace AuthyProvider
 {
@@ -49,6 +51,16 @@ namespace AuthyProvider
             {
                 throw new ArgumentNullException("manager");
             }
+            var authyId = FindAuthyId(user);
+            var email = FindEmail(user);
+            var oneTouchClient = new OneTouchClient(authyKey, authyId);
+            var result = oneTouchClient.SendApprovalRequest("Request login to Twilio demo app",
+                email);
+
+            if (result.Success)
+            {
+                return Task.FromResult(0);
+            }
 
             var client = new AuthyClient(authyKey);
             client.SendSms(FindAuthyId(user));
@@ -84,6 +96,19 @@ namespace AuthyProvider
             var id = authyIdProp.GetValue(user);
 
             return (string)id;
+        }
+
+        private string FindEmail(TUser user)
+        {
+            var userType = user.GetType();
+            var emailProp = userType.GetProperty("Email");
+
+            if (emailProp == null)
+                throw new NotImplementedException("A property named {0} could not be found on the user model");
+
+            var email = emailProp.GetValue(user);
+
+            return (string)email;
         }
     }
 }

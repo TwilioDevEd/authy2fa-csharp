@@ -29,10 +29,12 @@ namespace Authy2FA.Controllers
         }
 
         //
-        // GET: Authy/Callback
-        public async Task<ActionResult> Callback(string authyId, int status)
+        // POST: Authy/Callback
+        [HttpPost]
+        // ReSharper disable once InconsistentNaming
+        public async Task<ActionResult> Callback(string authy_id, string status)
         {
-            var user = await UserManager.FindByAuthyIdAsync(authyId);
+            var user = await UserManager.FindByAuthyIdAsync(authy_id);
             user.AuthyStatus = status;
             await UserManager.UpdateAsync(user);
 

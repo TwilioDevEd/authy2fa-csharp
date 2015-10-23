@@ -12,7 +12,7 @@ namespace Authy2FA.Models
     {
         public string AuthyId { get; set; }
 
-        public int AuthyStatus { get; set; }
+        public string AuthyStatus { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

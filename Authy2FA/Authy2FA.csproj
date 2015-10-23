@@ -176,9 +176,9 @@
     <Compile Include="Migrations\201502251700440_AuthyId.Designer.cs">
       <DependentUpon>201502251700440_AuthyId.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201510221537007_AddAuthyStatusToUsers.cs" />
-    <Compile Include="Migrations\201510221537007_AddAuthyStatusToUsers.Designer.cs">
-      <DependentUpon>201510221537007_AddAuthyStatusToUsers.cs</DependentUpon>
+    <Compile Include="Migrations\201510231423169_AddAuthyStatusToUsers.cs" />
+    <Compile Include="Migrations\201510231423169_AddAuthyStatusToUsers.Designer.cs">
+      <DependentUpon>201510231423169_AddAuthyStatusToUsers.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -261,8 +261,8 @@
     <EmbeddedResource Include="Migrations\201502251700440_AuthyId.resx">
       <DependentUpon>201502251700440_AuthyId.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201510221537007_AddAuthyStatusToUsers.resx">
-      <DependentUpon>201510221537007_AddAuthyStatusToUsers.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201510231423169_AddAuthyStatusToUsers.resx">
+      <DependentUpon>201510231423169_AddAuthyStatusToUsers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
