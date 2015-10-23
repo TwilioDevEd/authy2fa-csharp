@@ -2,24 +2,25 @@
 using System.Configuration;
 using System.Threading.Tasks;
 using Authy.Net;
+using Authy2FA.Domain.Authy;
 using Microsoft.AspNet.Identity;
 
 namespace Authy2FA.Providers
 {
-    public class AuthyTokenProvider<TUser> : AuthyTokenProvider<TUser, string> where TUser : class, IUser<string>
+    public class AuthyOneTouchProvider<TUser> : AuthyOneTouchProvider<TUser, string> where TUser : class, IUser<string>
     {
-        public AuthyTokenProvider(string authyIdPropertyName) : base(authyIdPropertyName) { }
+        public AuthyOneTouchProvider(string authyIdPropertyName) : base(authyIdPropertyName) { }
     }
 
-    public class AuthyTokenProvider<TUser, TKey> : IUserTokenProvider<TUser, TKey>
+    public class AuthyOneTouchProvider<TUser, TKey> : IUserTokenProvider<TUser, TKey>
         where TUser : class, IUser<TKey>
         where TKey : IEquatable<TKey>
     {
         private readonly string _authyKey = ConfigurationManager.AppSettings["AuthyKey"];
 
-        public AuthyTokenProvider(string authyIdPropertyName)
+        public AuthyOneTouchProvider(string authyIdPropertyName)
         {
-            AuthyIdPropertyName = authyIdPropertyName;
+            this.AuthyIdPropertyName = authyIdPropertyName;
         }
 
         public string AuthyIdPropertyName { get; private set; }
@@ -46,9 +47,11 @@ namespace Authy2FA.Providers
             {
                 throw new ArgumentNullException("manager");
             }
-
-            var client = new AuthyClient(_authyKey);
-            client.SendSms(FindAuthyId(user));
+            var authyId = FindAuthyId(user);
+            var email = FindEmail(user);
+            var oneTouchClient = new OneTouchClient(_authyKey, authyId);
+            oneTouchClient.SendApprovalRequest("Request login to Twilio demo app",
+                email);
 
             return Task.FromResult(0);
         }
@@ -65,7 +68,7 @@ namespace Authy2FA.Providers
         private string FindAuthyId(TUser user)
         {
             var userType = user.GetType();
-            var authyIdProp = userType.GetProperty(AuthyIdPropertyName);
+            var authyIdProp = userType.GetProperty(this.AuthyIdPropertyName);
 
             if (authyIdProp == null)
                 throw new NotImplementedException("A property named {0} could not be found on the user model");
@@ -75,5 +78,17 @@ namespace Authy2FA.Providers
             return (string)id;
         }
 
+        private static string FindEmail(TUser user)
+        {
+            var userType = user.GetType();
+            var emailProp = userType.GetProperty("Email");
+
+            if (emailProp == null)
+                throw new NotImplementedException("A property named {0} could not be found on the user model");
+
+            var email = emailProp.GetValue(user);
+
+            return (string)email;
+        }
     }
 }

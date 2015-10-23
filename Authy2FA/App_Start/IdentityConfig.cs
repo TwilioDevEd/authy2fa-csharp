@@ -75,7 +75,8 @@ namespace Authy2FA
             });
 
             // Register Authy as 2FA provider 
-            manager.RegisterTwoFactorProvider("Authy Code", new AuthyTokenProvider<ApplicationUser>("AuthyId"));
+            manager.RegisterTwoFactorProvider("Authy Token", new AuthyTokenProvider<ApplicationUser>("AuthyId"));
+            manager.RegisterTwoFactorProvider("Authy One Touch", new AuthyOneTouchProvider<ApplicationUser>("AuthyId"));
 
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
