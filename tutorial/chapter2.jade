@@ -1,43 +1,168 @@
-.step(data-title='Updating the User Model', data-file='Authy2FA/Models/IdentityModels.cs', data-highlight='10-12')
+.step(data-file='Authy2FA/Controllers/ManageController.cs', data-highlight='112-134')
   :markdown
-    ## Updating the User Model
+    ## Registering a User with Authy
 
-    The Identity system has a few persistent Entity Framework models that contain profile information about the user. We can use these largely unchanged, but there is one extra bit of data we need to track about the user - an Authy user ID. We use this ID for Authy API requests to send 2FA validation tokens and to verify the tokens they input during the login process.
+    When a new User signs up for our website, we call this controller, which
+    handles saving our new User to the database as well as registering the User
+    with Authy.
 
-    We're using [code first migrations](http://www.asp.net/mvc/overview/getting-started/getting-started-with-ef-using-mvc/migrations-and-deployment-with-the-entity-framework-in-an-asp-net-mvc-application) in this project, so we declare a new `string` property on the User model to contain their Authy ID, which we will populate later.
+    All Authy needs to get a user set up for your application is the email,
+    phone number and country code. In order to do two-factor authentication,
+    we need to make sure we ask for these things at the point of sign up.
 
-    When running this project locally, you would need to open the Package Manager console and enter the `Enable-Migrations` command first. You can update the database with the migrations generated for this model already with the `Update-Database` command in the package manager console.  This migration should exist already if you downloaded the project from GitHub
+    Once we register the User with Authy we get an `AuthyId` back. This is
+    very important since it's how we will verify the identity of our User with
+    Authy.
 
-    That's all we need to change at the model level, but we're not done configuring the Identity system yet.  Let's see how we configure Authy as the 2FA provider for our application..
-.step(data-title="Register Authy as a 2FA Provider", data-file='Authy2FA/App_Start/IdentityConfig.cs', data-highlight="77-78")
+    ---
+
+    **See Also:**
+    * [Introduction to ASP.NET Identity](//www.asp.net/identity/overview/getting-started/introduction-to-aspnet-identity)
+    * [Enabling a User with Authy](//docs.authy.com/#section-Enabling_two-factor_on_a_user)
+
+.step(data-file='Authy2FA/Providers/AuthyOneTouchProvider.cs', data-highlight='44-56')
   :markdown
-    ## Register Authy as a 2FA Provider
+    ## Logging in with Authy OneTouch
 
-    `IdentityConfig.cs` is the primary configuration file for the Identity system in our application. In this file, you can configure everything from password strength requirements to 2FA providers, which we do in these two lines of code here.
+    When a User attempts to log in to our website, we will ask them for a second 
+    form of identification. Let's take a look at OneTouch verification first. 
 
-    Explaining the features of Identity namespace is not something we'll be able to do justice to in this tutorial, so if you'd like to learn more about how Identity is configured, token providers, and the other specifics of the API, you might consider these resources from Microsoft:
+    ![Authy OneTouch Approval](//howtodocs.s3.amazonaws.com/onetouch-approved.gif)
 
-    * [Getting Started with Identity](http://www.asp.net/identity)
-    * [Identity Namespace API docs](https://msdn.microsoft.com/en-us/library/microsoft.aspnet.identity(v=vs.108).aspx)
+    OneTouch works like so:
+    * We attempt to send a User a _OneTouch Approval Request_
+    * If the User has OneTouch enabled, we will get a `success` message back
+    * The User hits 'approve' in their Authy app
+    * Authy makes a POST request to our app with an 'approved' status
+    * We log the User in
 
-    Let's take a brief look at the `AuthyTokenProvider` class to see what it needs to do to function as a 2FA provider for our application.
+    In the next steps we'll look at how we handle cases where the User does not
+    have OneTouch, or denies the login request.
 
-.step(data-title="The Authy 2FA Provider", data-file='Authy2FA/AuthyProvider/AuthyProvider.cs')
+.step(data-file='Authy2FA/Providers/AuthyOneTouchProvider.cs', data-highlight='44-56')
   :markdown
-    ## The Authy 2FA Provider
+    ## Sending the OneTouch Request
 
-    In this file, we create the `AuthyProvider` namespace, which contains a `AuthyTokenProvider` class. This class [is used by ASP.NET Identity](http://www.asp.net/identity/overview/features-api/two-factor-authentication-using-sms-and-email-with-aspnet-identity#reg) to both send a verification token to a device, and to verify the token that was sent.
+    When our User logs in we let the user decide which two-factor authentication
+    provider will used, it can be either _Authy One Touch_ or _Authy Token_.
+    Authy OneTouch should be used when the user have a registered OneTouch
+    device.
 
-    The two key methods to note here are `NotifyAsync` and `ValidateAsync`. These methods use the Authy client to send a one-time password and validate a one-time password, respectively.  Each depends on being provided with an Identity user class with a persistent `AuthyId` string property, which we created on the model earlier.
+    Authy lets us pass details with our OneTouch request, including a message,
+    a logo and any other details we want to send. We could easily send any
+    number of details by appending `details['some_detail']`. You could imagine a
+    scenario where we send a OneTouch request to approve a money transfer:
 
-    Now that we've made it possible to use Authy for 2FA, let's see how a user would opt in to using 2FA in the first place.
+    ```javascript
+    var request = new NameValueCollection
+    {
+      {"message", "Request to Send Money to Jarod's vault"},
+      {"details['Request From']", "Jarod"},
+      {"details['Amount Request']", "1,000,000"},
+      {"details['Currency']", "Galleons"}
+    };
+    ```
+    Once we send the request we need to update our User's `AuthyStatus` based
+    on the response.
 
-.step(data-title="Enabling Two-Factor Authentication", data-file='Authy2FA/Controllers/ManageController.cs', data-highlight="114-134")
+    --- 
+
+    **See Also:**
+    * [NameValueCollection Class](//msdn.microsoft.com/en-us/library/system.collections.specialized.namevaluecollection.aspx)
+
+.step(data-file='Authy2FA/Controllers/AuthyController.cs', data-highlight='32-47, 73-77')
   :markdown
-    ## Enabling Two-Factor Authentication for a User
+    ## Configuring the OneTouch callback
 
-    In the default setup for an ASP.NET MVC app using Identity for authentication, a user must sign up first, and then elect to enable two-factor authentication after creating an account. To use Authy for 2FA, we need to add an [Authy User](https://docs.authy.com/#section-Enabling_two-factor_on_a_user) for them associated with the phone number they enter.
+    In order for our app to know what the User did after we sent the OneTouch
+    request, we need to register a callback endpoint with Authy.
 
-    This is the controller method that handles adding the phone number for the 2FA step. We've added code here to use the Authy API client to create a new Authy user, and to store their Authy user ID on the Identity model in our database. Now the user account in our database is tied to an Authy user, so we can verify any one-time password codes sent to the user.
+    ![Authy OneTouch Callback](//howtodocs.s3.amazonaws.com/onetouch-callback-endpoint.png)
 
-    Now that our user has elected 2FA for login, let's step through the actual login flow.
+    *Note: In order to verify that the request is coming from Authy we've
+    written a helper method that will halt the request if it appears it isn't coming
+    from Authy.
+
+    Here in our callback, we look up the user using the `authy_id` sent with the
+    Authy POST request. Ideally at this point we would probably use a websocket
+    to let our client know that we received a response from Authy. However for
+    this version we're going to keep it simple and just update the
+    `AuthyStatus` on the User. Then all our client-side code needs to do is
+    check for `user.AuthyStatus == "approved"` before logging her in.
+
+
+    Let's take a look at the client-side code that will be handling this.
+
+    ---
+
+    **See Also:**
+    * [UserManager<TUser, TKey> Class](//msdn.microsoft.com/en-us/library/dn613290.aspx)
+
+.step(data-file='Authy2FA/Scripts/onetouch.js')
+  :markdown
+    ## Handling Two-Factor Asyncronously
+
+    We've already taken a look at what's happening on the server side, so let's
+    step in front of the cameras now and see how our JavaScript is interacting
+    with those server endpoints.
+
+    When we expect a OneTouch response, we will begin polling
+    `/Authy/OneTouchStatus` until we either see OneTouch login was either
+    approved or denied. Let's take a  look at this controller and see what is
+    happening.
+
+    --- 
+
+    **See Also:**
+    * [jQuery Post method](//api.jquery.com/jquery.post/)
+    * [jQuery submit()](//api.jquery.com/submit/)
+
+.step(data-file='Authy2FA/Controllers/AuthyController.cs', data-highlight='49-71')
+  :markdown
+    ## Is Approved or Denied
+
+    Here is the endpoint that our javascript is polling. It is waiting for the
+    user status to be either **approved** or **denied**.
+
+    ---
+
+    **See Also:**
+    * [SignInManager<TUser, TKey>.GetVerifiedUserIdAsync Method ()](//msdn.microsoft.com/en-us/library/mt173765.aspx)
+    * [UserManager<TUser, TKey>.FindByIdAsync Method](https://msdn.microsoft.com/en-us/library/dn497542.aspx)
+
+.step(data-file='Authy2FA/Controllers/AccountController.cs', data-highlight='150-172')
+  :markdown
+    ## When we have an AuthyStatus
+
+    If the `AuthyStatus` is approved, then the user will be redirected to the
+    home page, otherwise we'll show the `/Account/Login` form.
+
+    ---
+
+    **See Also:**
+    * [SignInManager<TUser, TKey>.TwoFactorSignInAsync Method](https://msdn.microsoft.com/en-us/library/mt173758.aspx)
+
+.step
+  :markdown
+    ## Where to next?
+
+    That's it! We've just implemented two-factor auth using three different
+    methods and the latest in Authy technology.
+
+    If you're a C# developer working with Twilio, you might enjoy these
+    other tutorials:
+
+    [**IVR: Phone Tree**](https://www.twilio.com/docs/howto/walkthrough/ivr-phone-tree/csharp/mvc)
+
+    Easily route callers to the right people and information with an IVR
+    (interactive voice response) system
+
+    [**Call Tracking**](//www.twilio.com/docs/howto/walkthrough/call-tracking/csharp/mvc)
+
+    Use Twilio to track the effectiveness of your marketing campaigns.
+
+    ### Did this help?
+
+    Thanks for checking out this tutorial! If you have any feedback to share
+    with us, we'd love to hear it. Tweet
+    [@twilio](http://twitter.com/twilio) to let us know what you think.
