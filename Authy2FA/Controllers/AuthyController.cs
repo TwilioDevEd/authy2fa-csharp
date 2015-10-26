@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Authy.Net;
+using Authy2FA.Domain.Authy;
 using Authy2FA.Models;
 using Microsoft.AspNet.Identity.Owin;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using WebGrease.Css.Extensions;
 
 namespace Authy2FA.Controllers
 {
@@ -44,7 +38,7 @@ namespace Authy2FA.Controllers
         {
             if (!AuthenticateAuthyRequest())
             {
-                throw new Exception("Harmful request");
+                throw new Exception("This request is unsigned");
             }
 
             var user = await UserManager.FindByAuthyIdAsync(authy_id);
@@ -87,7 +81,6 @@ namespace Authy2FA.Controllers
             }
 
             return Content(status);
-
         }
 
         //
@@ -113,18 +106,8 @@ namespace Authy2FA.Controllers
 
         private bool AuthenticateAuthyRequest()
         {
-            return true;
+            var apiKey = ConfigurationManager.AppSettings["AuthyKey"];
+            return new OneTouchRequestValidator(apiKey, Request).Validate();
         }
-
-        private JObject Sort(JObject jObject)
-        {
-            var properties =  jObject.Properties().ToList().OrderBy(p => p.Name);
-
-            var result = new JObject();
-            properties.ForEach(property => result.Add(property.Name, property.Value));
-
-            return result;
-        }
-
     }
 }
