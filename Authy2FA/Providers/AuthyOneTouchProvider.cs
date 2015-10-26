@@ -50,16 +50,15 @@ namespace Authy2FA.Providers
             var authyId = FindAuthyId(user);
             var email = FindEmail(user);
             var oneTouchClient = new OneTouchClient(_authyKey, authyId);
-            oneTouchClient.SendApprovalRequest("Request login to Twilio demo app",
-                email);
+            oneTouchClient.SendApprovalRequest("Request login to Twilio demo app", email);
 
             return Task.FromResult(0);
         }
 
         public async Task<bool> ValidateAsync(string purpose, string token, UserManager<TUser, TKey> manager, TUser user)
         {
-            // This method relies on the validation made by Authy/Callback
-            return user != null;
+            var authyStatus = FindAuthyStatus(user);
+            return authyStatus == "approved";
         }
 
         private string FindAuthyId(TUser user)
@@ -86,6 +85,19 @@ namespace Authy2FA.Providers
             var email = emailProp.GetValue(user);
 
             return (string)email;
+        }
+
+        private static string FindAuthyStatus(TUser user)
+        {
+            var userType = user.GetType();
+            var authyStatusProp = userType.GetProperty("AuthyStatus");
+
+            if (authyStatusProp == null)
+                throw new NotImplementedException("A property named {0} could not be found on the user model");
+
+            var authyStatus = authyStatusProp.GetValue(user);
+
+            return (string) authyStatus;
         }
     }
 }

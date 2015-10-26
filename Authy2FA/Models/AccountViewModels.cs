@@ -39,6 +39,14 @@ namespace Authy2FA.Models
         public bool RememberMe { get; set; }
     }
 
+    public class VerifyOneTouchViewModel
+    {
+        public string Provider { get; set; }
+        public string ReturnUrl { get; set; }
+        public bool RememberBrowser { get; set; }
+        public bool RememberMe { get; set; }
+    }
+
     public class ForgotViewModel
     {
         [Required]
