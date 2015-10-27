@@ -4,21 +4,41 @@ This example application demonstrates how to use [Authy](http://www.authy.com) a
 
 For more information on how this code works, [check out our interactive code walkthrough](http://www.twilio.com/docs/howto/walkthrough/two-factor-authentication/csharp/mvc#1).
 
-## Running Locally
+## Local Development
 
-In order to run this project locally, you will need to move/rename `Authy2FA\Authy2FA\Web.config.sample` to `Authy2FA\Authy2FA\Web.config`. In this file, you will need to locate and change this value to your Authy production key from your dashboard:
+1. First clone this repository and `cd` into its directory:
+   ```
+   git clone git@github.com:TwilioDevEd/authy2fa-csharp.git
 
-        
-```xml
-<add key="AuthyKey" value="your authy production key"/>
-```
+   cd authy2fa-csharp
+   ```
 
-You might also need to run through the initial set of migrations for Entity Framework. In the NuGet Package Manager console, enter:
+2. Create a new file `Authy2FA/Local.config` and update the content with:
+   ```
+   <appSettings>
+     <add key="webpages:Version" value="3.0.0.0" />
+     <add key="webpages:Enabled" value="false" />
+     <add key="ClientValidationEnabled" value="true" />
+     <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+     <add key="AuthyKey" value="your authy production key" />
+   </appSettings>
+   ```
 
-```bash
-Create-Database
-```
+3. Build the solution.
 
-## License
+4. Run `Update-Database` at [Package Manager
+   Console](https://docs.nuget.org/consume/package-manager-console) to execute the migrations.
 
-MIT
+5. Run the application.
+
+6. Check it out at http://localhost:49217
+
+That's it!
+
+To let Authy OneTouch to use the callback endpoint you exposed, your development server will need to be publicly accessible. [We recommend using ngrok to solve this problem](https://www.twilio.com/blog/2015/09/6-awesome-reasons-to-use-ngrok-when-testing-webhooks.html).
+
+## Meta
+
+* No warranty expressed or implied. Software is as is. Diggity.
+* [MIT License](http://www.opensource.org/licenses/mit-license.html)
+* Lovingly crafted by Twilio Developer Education.
