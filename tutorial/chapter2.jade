@@ -43,9 +43,9 @@
   :markdown
     ## Sending the OneTouch Request
 
-    When our User logs in we let the user decide which two-factor authentication
-    provider will used, it can be either _Authy One Touch_ or _Authy Token_.
-    Authy OneTouch should be used when the user have a registered OneTouch
+    When our User logs in, we let the user decide which two-factor authentication
+    provider will be used. It can be either _Authy One Touch_ or _Authy Token_.
+    Authy OneTouch should be used when the user has a registered OneTouch
     device.
 
     Authy lets us pass details with our OneTouch request, including a message,
@@ -79,7 +79,7 @@
 
     ![Authy OneTouch Callback](//howtodocs.s3.amazonaws.com/onetouch-callback-endpoint.png)
 
-    *Note: In order to verify that the request is coming from Authy we've
+    **Note:** In order to verify that the request is coming from Authy, we've
     written a helper method that will halt the request if it appears it isn't coming
     from Authy.
 
@@ -100,7 +100,7 @@
 
 .step(data-file='Authy2FA/Scripts/onetouch.js')
   :markdown
-    ## Handling Two-Factor Asyncronously
+    ## Handle Two-Factor in the Browser
 
     We've already taken a look at what's happening on the server side, so let's
     step in front of the cameras now and see how our JavaScript is interacting
@@ -119,9 +119,9 @@
 
 .step(data-file='Authy2FA/Controllers/AuthyController.cs', data-highlight='49-71')
   :markdown
-    ## Is Approved or Denied
+    ## Check Login Status
 
-    Here is the endpoint that our javascript is polling. It is waiting for the
+    Here is the endpoint that our JavaScript is polling. It is waiting for the
     user status to be either **approved** or **denied**.
 
     ---
@@ -132,7 +132,7 @@
 
 .step(data-file='Authy2FA/Controllers/AccountController.cs', data-highlight='150-172')
   :markdown
-    ## When we have an AuthyStatus
+    ## Finish the 2FA Step
 
     If the `AuthyStatus` is approved, then the user will be redirected to the
     home page, otherwise we'll show the `/Account/Login` form.

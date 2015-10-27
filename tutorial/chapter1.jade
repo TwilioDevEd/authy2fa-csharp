@@ -1,14 +1,14 @@
 .step(data-title='How it Works',
-data-file='Authy2FA/Providers/AuthyOneTouchProvider.cs', data-highlight='44-56')
+data-file='Authy2FA/Providers/AuthyOneTouchProvider.cs')
   :markdown
     ## About this application
 
-    This [ASP.NET MVC](//www.asp.net/mvc) sample application is an
-    example of typical login flow. To run this sample app yourself, [download
-    the code and follow the instructions on
+    This [ASP.NET MVC](//www.asp.net/mvc) sample application demonstrates
+    two-factor authentication (2FA) using Authy. To run this sample app yourself, 
+    [download the code and follow the instructions on
     GitHub](https://github.com/TwilioDevEd/authy2fa-csharp).
 
-    Adding two-factor authentication (2FA) to your web application increases the 
+    Adding 2FA to your web application increases the 
     security of your user's data. [Multi-factor authentication](http://en.wikipedia.org/wiki/Multi-factor_authentication) 
     determines the identity of a user by validating once by logging into the app, 
     and second by validating their mobile device.
@@ -41,9 +41,8 @@ data-file='Authy2FA/App_Start/IdentityConfig.cs', data-highlight='77-79')
 
     ![Authy Dashboard](//s3.amazonaws.com/howtodocs/2fa-authy-dashboard.png)
 
-    Once we have an Authy API key, we store it in the `Web.config` file.
-
-    We also need to register the Authy as a 2FA provider on `IdentityConfig`.
+    Once we have an Authy API key, we store it in the `Web.config` file. We also 
+    need to register the Authy as a 2FA provider on `IdentityConfig`.
 
     ---
 
