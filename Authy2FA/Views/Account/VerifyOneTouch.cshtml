@@ -1,0 +1,17 @@
+﻿@model Authy2FA.Models.VerifyOneTouchViewModel
+<h2>Please Authenticate</h2>
+
+<i class="fa fa-spinner fa-pulse"></i> Waiting for <i>OneTouch</i> approval
+
+@using (Html.BeginForm("VerifyOneTouch", "Account"))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("provider", @Model.Provider)
+    @Html.Hidden("rememberMe", @Model.RememberMe)
+}
+
+@section scripts
+{
+    @Scripts.Render("~/Scripts/onetouch.js")
+}
+

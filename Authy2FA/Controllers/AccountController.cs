@@ -135,6 +135,43 @@ namespace Authy2FA.Controllers
         }
 
         //
+        // GET: /Account/VerifyOneTouch
+        [AllowAnonymous]
+        public async Task<ActionResult> VerifyOneTouch(string provider, string returnUrl, bool rememberMe)
+        {
+            // Require that the user has already logged in via username/password or external login
+            if (!await SignInManager.HasBeenVerifiedAsync())
+            {
+                return View("Error");
+            }
+            return View(new VerifyOneTouchViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
+        }
+
+        //
+        // POST: /Account/VerifyOneTouch
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> VerifyOneTouch(VerifyOneTouchViewModel model)
+        {
+            var result = await SignInManager.TwoFactorSignInAsync(
+                model.Provider, string.Empty, model.RememberMe, model.RememberBrowser);
+
+            ResetAuthyStatus();
+
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToLocal(model.ReturnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                default:
+                    // default case covers SignInStatus.Failure
+                    return RedirectToAction("Login");
+            }
+        }
+
+        //
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -314,7 +351,17 @@ namespace Authy2FA.Controllers
             {
                 return View("Error");
             }
-            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+
+            if (model.SelectedProvider.Equals("Authy Token"))
+            {
+                return RedirectToAction("VerifyCode",
+                    new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            }
+            else
+            {
+                return RedirectToAction("VerifyOneTouch",
+                    new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            }
         }
 
         //
@@ -480,6 +527,18 @@ namespace Authy2FA.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
+
+        /// <summary>
+        /// Reset Authy Status after sign in.
+        /// </summary>
+        private void ResetAuthyStatus()
+        {
+            var userId = SignInManager.GetVerifiedUserId();
+            var user = UserManager.FindById(userId);
+            user.AuthyStatus = string.Empty;
+            UserManager.Update(user);
+        }
         #endregion
+
     }
 }

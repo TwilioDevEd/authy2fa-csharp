@@ -125,9 +125,14 @@ namespace Authy2FA.Controllers
             {
                 var result = _authyClient.RegisterUser(user.Email, model.Number, int.Parse(model.CountryCode.Replace("+", "")));
                 user.AuthyId = result.UserId;
+                if (result.UserId == null)
+                {
+                    throw new Exception("UserId can't be null, please check your Authy key");
+                }
+
                 await UserManager.UpdateAsync(user);
 
-                _authyClient.SendSms(user.AuthyId, true);
+                _authyClient.SendSms(user.AuthyId);
             }
 
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
