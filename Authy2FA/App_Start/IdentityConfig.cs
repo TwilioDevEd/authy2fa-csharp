@@ -11,7 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Authy2FA.Models;
-using AuthyProvider;
+using Authy2FA.Providers;
 
 namespace Authy2FA
 {
@@ -75,7 +75,8 @@ namespace Authy2FA
             });
 
             // Register Authy as 2FA provider 
-            manager.RegisterTwoFactorProvider("Authy Code", new AuthyTokenProvider<ApplicationUser>("AuthyId"));
+            manager.RegisterTwoFactorProvider("Authy One Touch", new AuthyOneTouchProvider<ApplicationUser>("AuthyId"));
+            manager.RegisterTwoFactorProvider("Authy Token", new AuthyTokenProvider<ApplicationUser>("AuthyId"));
 
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
@@ -86,6 +87,16 @@ namespace Authy2FA
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+        }
+
+        public ApplicationUser FindByAuthyId(string authyId)
+        {
+            return Users.FirstOrDefault(x => x.AuthyId == authyId);
+        }
+
+        public Task<ApplicationUser> FindByAuthyIdAsync(string authyId)
+        {
+            return Users.FirstOrDefaultAsync(x => x.AuthyId == authyId);
         }
     }
 
