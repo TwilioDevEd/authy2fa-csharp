@@ -1,0 +1,3 @@
+<appSettings>
+  <add key="AuthyKey" value="YOUR AUTHY API KEY" />
+</appSettings>
