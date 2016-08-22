@@ -1,5 +1,5 @@
 .step(
-  data-title='How it Works',
+  data-title='About This Application',
   data-file='Authy2FA/Providers/AuthyOneTouchProvider.cs')
   :markdown
     ## About This Application
@@ -12,13 +12,16 @@
     Adding 2FA to your web application increases the
     security of your user's data. [Multi-factor authentication](http://en.wikipedia.org/wiki/Multi-factor_authentication)
     determines the identity of a user by validating once by logging into the app,
-    and second by validating their mobile device.
+    and then by validating their mobile device.
 
     For the second factor, we will validate that the user has their mobile phone by either:
-    * Sending them a OneTouch push notification to their mobile Authy app or
-    * Sending them a token through their mobile Authy app or
+
+    * Sending them a OneTouch push notification to their mobile Authy app
+    * Sending them a token through their mobile Authy app
     * Sending them a one-time token in a text message [sent with Authy via
-    Twilio](http://www.authy.com/). Here's how this works at a high level:
+    Twilio](http://www.authy.com/).
+
+    Here's how this works at a high level:
 
     ![2FA High Level](//s3.amazonaws.com/howtodocs/2fa-high-level.png)
 
@@ -46,7 +49,7 @@
     ![Authy Dashboard](//s3.amazonaws.com/howtodocs/2fa-authy-dashboard.png)
 
     Once we have an Authy API key, we store it in the `Web.config` file. We also
-    need to register the Authy as a 2FA provider on `IdentityConfig`.
+    need to register Authy as a 2FA provider on `IdentityConfig`.
 
     ---
 
@@ -61,13 +64,13 @@
   :markdown
     ## Registering a User with Authy
 
-    When a new User signs up for our website, we call this controller, which
-    handles saving our new User to the database as well as registering the User
+    When a new user signs up for our website, we call this controller, which
+    handles saving our new user to the database as well as registering the User
     with Authy.
 
     All Authy needs to get a user set up for your application is the email,
     phone number and country code. In order to do two-factor authentication,
-    we need to make sure we ask for these things at the point of sign up.
+    we need to make sure we ask for this information at sign up.
 
     Once we register the User with Authy we get an `AuthyId` back. This is
     very important since it's how we will verify the identity of our User with
@@ -90,15 +93,15 @@
 
     ![Authy OneTouch Approval](//howtodocs.s3.amazonaws.com/onetouch-approved.gif)
 
-    OneTouch works like so:
+    OneTouch works as follows:
 
     * We attempt to send a User a _OneTouch Approval Request_.
     * If the User has OneTouch enabled, we will get a `success` message back.
     * The User hits 'approve' in their Authy app.
     * Authy makes a POST request to our app with an 'approved' status.
-    * We log the User in.
+    * We log the user in.
 
-    In the next steps we'll look at how we handle cases where the User does not
+    In the next steps we'll look at how we handle cases where the user does not
     have OneTouch, or denies the login request.
 
 .step(
@@ -107,7 +110,7 @@
   :markdown
     ## Sending the OneTouch Request
 
-    When our User logs in, we let the user decide which two-factor authentication
+    When our user logs in, we let the user decide which two-factor authentication
     provider will be used. It can be either _Authy One Touch_ or _Authy Token_
     Authy OneTouch should be used when the user has a registered OneTouch
     device.
@@ -127,7 +130,7 @@
     };
     ```
 
-    Once we send the request we need to update our User's `AuthyStatus` based
+    Once we send the request we need to update our user's `AuthyStatus` based
     on the response.
 
     ---
@@ -139,7 +142,7 @@
   data-file='Authy2FA/Controllers/AuthyController.cs',
   data-highlight='32-47,73-77')
   :markdown
-    ## Configuring the OneTouch Callback
+    ## Configuring OneTouch Callback
 
     In order for our app to know what the User did after we sent the OneTouch
     request, we need to register a callback endpoint with Authy.
@@ -150,12 +153,12 @@
     written a helper method that will halt the request if it appears it isn't coming
     from Authy.
 
-    Here in our callback, we look up the user using the `authy_id` sent with the
+    Here in our callback, we look the user up using the `authy_id` sent with the
     Authy POST request. Ideally at this point we would probably use a websocket
     to let our client know that we received a response from Authy. However for
     this version we're going to keep it simple and just update the
-    `AuthyStatus` on the User. Then all our client-side code needs to do is
-    check for `user.AuthyStatus == "approved"` before logging her in.
+    `AuthyStatus` on the user. Then all our client-side code needs to do is
+    check for `user.AuthyStatus == "approved"` before logging him/her in.
 
 
     Let's take a look at the client-side code that will be handling this.
@@ -168,7 +171,7 @@
 
 .step(data-file='Authy2FA/Scripts/onetouch.js')
   :markdown
-    ## Handle Two-Factor in the Browser
+    ## Handling Two-Factor in the Browser
 
     We've already taken a look at what's happening on the server side, so let's
     step in front of the cameras now and see how our JavaScript is interacting
@@ -176,7 +179,7 @@
 
     When we expect a OneTouch response, we will begin polling
     `/Authy/OneTouchStatus` until we either see OneTouch login was either
-    approved or denied. Let's take a  look at this controller and see what is
+    approved or denied. Let's take a look at this controller and see what is
     happening.
 
     ---
@@ -189,7 +192,7 @@
   data-file='Authy2FA/Controllers/AuthyController.cs',
   data-highlight='49-71')
   :markdown
-    ## Check Login Status
+    ## Checking Login Status
 
     Here is the endpoint that our JavaScript is polling. It is waiting for the
     user status to be either **approved** or **denied**.
@@ -204,7 +207,7 @@
   data-file='Authy2FA/Controllers/AccountController.cs',
   data-highlight='150-172')
   :markdown
-    ## Finish the 2FA Step
+    ## Finishing the 2FA Step
 
     If the `AuthyStatus` is approved, then the user will be redirected to the
     home page, otherwise we'll show the `/Account/Login` form.
@@ -218,7 +221,7 @@
   :markdown
     ## Where to Next?
 
-    That's it! We've just implemented two-factor auth using three different
+    That's it! We've just implemented two-factor authentication using three different
     methods and the latest in Authy technology.
 
     If you're a C# developer working with Twilio, you might enjoy these
@@ -227,7 +230,7 @@
     [**IVR: Phone Tree**](https://www.twilio.com/docs/howto/walkthrough/ivr-phone-tree/csharp/mvc)
 
     Easily route callers to the right people and information with an IVR
-    (interactive voice response) system
+    (interactive voice response) system.
 
     [**Call Tracking**](//www.twilio.com/docs/howto/walkthrough/call-tracking/csharp/mvc)
 

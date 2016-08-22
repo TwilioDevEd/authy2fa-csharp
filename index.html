@@ -9,7 +9,7 @@
 .wrapper {
   height:100%;
   width:100%;
-}</style><link rel="shortcut icon" href="//twilio.com/bundles/marketing/img/favicons/favicon.ico"><link rel="apple-touch-icon" href="//twilio.com/bundles/marketing/img/favicons/favicon_57.png"><link rel="apple-touch-icon" sizes="72x72" href="//twilio.com/bundles/marketing/img/favicons/favicon_72.png"><link rel="apple-touch-icon" sizes="114x114" href="//twilio.com/bundles/marketing/img/favicons/favicon_114.png"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"><link rel="stylesheet" href="viewsaurus.css"></head><body><div class="wrapper"><div id="viewsaurus" data-title="Two-Factor Authentication with Authy"><div class="saurus-panes"><div class="saurus-prose"><div class="saurus-prose-header"><div class="title-outer"><span class="step-title">Two-Factor Authentication with Authy</span></div></div><div class="saurus-nav-buttons"><div class="saurus-nav-button nav-overview"><div class="saurus-nav-button-inner"><i class="fa fa-fw fa-list"></i></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-previous"><div class="saurus-nav-button-inner"><a href=""> <i class="fa fa-fw fa-play fa-rotate-180"></i></a></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-next clickable"><div class="saurus-nav-button-inner"><a href="#1"> <i class="fa fa-fw fa-play"></i></a></div></div><div class="saurus-next-title"><span class="next-title-inner"></span></div></div><div class="saurus-progress-bar"></div><div class="saurus-start"><p>Learn to implement two-factor authentication (2FA) in your web app with Twilio-powered Authy. 2FA helps further secure your users' data by validating more than just a password. This tutorial will show you the code to make it happen.</p><a href="#0">Start Tutorial</a></div><div class="saurus-content"><div data-title="How it Works" data-file="Authy2FA/Providers/AuthyOneTouchProvider.cs" class="step"><h2 id="about-this-application">About This Application</h2>
+}</style><link rel="shortcut icon" href="//twilio.com/bundles/marketing/img/favicons/favicon.ico"><link rel="apple-touch-icon" href="//twilio.com/bundles/marketing/img/favicons/favicon_57.png"><link rel="apple-touch-icon" sizes="72x72" href="//twilio.com/bundles/marketing/img/favicons/favicon_72.png"><link rel="apple-touch-icon" sizes="114x114" href="//twilio.com/bundles/marketing/img/favicons/favicon_114.png"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"><link rel="stylesheet" href="viewsaurus.css"></head><body><div class="wrapper"><div id="viewsaurus" data-title="Two-Factor Authentication with Authy"><div class="saurus-panes"><div class="saurus-prose"><div class="saurus-prose-header"><div class="title-outer"><span class="step-title">Two-Factor Authentication with Authy</span></div></div><div class="saurus-nav-buttons"><div class="saurus-nav-button nav-overview"><div class="saurus-nav-button-inner"><i class="fa fa-fw fa-list"></i></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-previous"><div class="saurus-nav-button-inner"><a href=""> <i class="fa fa-fw fa-play fa-rotate-180"></i></a></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-next clickable"><div class="saurus-nav-button-inner"><a href="#1"> <i class="fa fa-fw fa-play"></i></a></div></div><div class="saurus-next-title"><span class="next-title-inner"></span></div></div><div class="saurus-progress-bar"></div><div class="saurus-start"><p>Learn to implement two-factor authentication (2FA) in your web app with Twilio-powered Authy. 2FA helps further secure your users' data by validating more than just a password. This tutorial will show you the code to make it happen.</p><a href="#0">Start Tutorial</a></div><div class="saurus-content"><div data-title="About This Application" data-file="Authy2FA/Providers/AuthyOneTouchProvider.cs" class="step"><h2 id="about-this-application">About This Application</h2>
 <p>This <a href="//www.asp.net/mvc">ASP.NET MVC</a> sample application demonstrates
 two-factor authentication (2FA) using Authy. To run this sample app yourself,
 <a href="https://github.com/TwilioDevEd/authy2fa-csharp">download the code and follow the instructions on
@@ -17,14 +17,15 @@ GitHub</a>.</p>
 <p>Adding 2FA to your web application increases the
 security of your user&#39;s data. <a href="http://en.wikipedia.org/wiki/Multi-factor_authentication">Multi-factor authentication</a>
 determines the identity of a user by validating once by logging into the app,
-and second by validating their mobile device.</p>
+and then by validating their mobile device.</p>
 <p>For the second factor, we will validate that the user has their mobile phone by either:</p>
 <ul>
-<li>Sending them a OneTouch push notification to their mobile Authy app or</li>
-<li>Sending them a token through their mobile Authy app or</li>
+<li>Sending them a OneTouch push notification to their mobile Authy app</li>
+<li>Sending them a token through their mobile Authy app</li>
 <li>Sending them a one-time token in a text message <a href="http://www.authy.com/">sent with Authy via
-Twilio</a>. Here&#39;s how this works at a high level:</li>
+Twilio</a>.</li>
 </ul>
+<p>Here&#39;s how this works at a high level:</p>
 <p><img src="//s3.amazonaws.com/howtodocs/2fa-high-level.png" alt="2FA High Level"></p>
 <p>Let&#39;s get started! Click the right arrow above to move to the next step
 of the tutorial.</p>
@@ -40,7 +41,7 @@ Create your first application, naming it whatever you wish. After you create you
 your &quot;production&quot; API key will be visible on your <a href="https://dashboard.authy.com">dashboard</a>:</p>
 <p><img src="//s3.amazonaws.com/howtodocs/2fa-authy-dashboard.png" alt="Authy Dashboard"></p>
 <p>Once we have an Authy API key, we store it in the <code>Web.config</code> file. We also
-need to register the Authy as a 2FA provider on <code>IdentityConfig</code>.</p>
+need to register Authy as a 2FA provider on <code>IdentityConfig</code>.</p>
 <hr>
 <p><strong>See Also:</strong></p>
 <ul>
@@ -49,12 +50,12 @@ need to register the Authy as a 2FA provider on <code>IdentityConfig</code>.</p>
 <li><a href="https://msdn.microsoft.com/en-us/library/610xe886.aspx">How to: Read Application Settings from the Web.config File</a></li>
 </ul>
 </div><div data-file="Authy2FA/Controllers/ManageController.cs" data-highlight="112-134" class="step"><h2 id="registering-a-user-with-authy">Registering a User with Authy</h2>
-<p>When a new User signs up for our website, we call this controller, which
-handles saving our new User to the database as well as registering the User
+<p>When a new user signs up for our website, we call this controller, which
+handles saving our new user to the database as well as registering the User
 with Authy.</p>
 <p>All Authy needs to get a user set up for your application is the email,
 phone number and country code. In order to do two-factor authentication,
-we need to make sure we ask for these things at the point of sign up.</p>
+we need to make sure we ask for this information at sign up.</p>
 <p>Once we register the User with Authy we get an <code>AuthyId</code> back. This is
 very important since it&#39;s how we will verify the identity of our User with
 Authy.</p>
@@ -68,18 +69,18 @@ Authy.</p>
 <p>When a User attempts to log in to our website, we will ask them for a second
 form of identification. Let&#39;s take a look at OneTouch verification first.</p>
 <p><img src="//howtodocs.s3.amazonaws.com/onetouch-approved.gif" alt="Authy OneTouch Approval"></p>
-<p>OneTouch works like so:</p>
+<p>OneTouch works as follows:</p>
 <ul>
 <li>We attempt to send a User a <em>OneTouch Approval Request</em>.</li>
 <li>If the User has OneTouch enabled, we will get a <code>success</code> message back.</li>
 <li>The User hits &#39;approve&#39; in their Authy app.</li>
 <li>Authy makes a POST request to our app with an &#39;approved&#39; status.</li>
-<li>We log the User in.</li>
+<li>We log the user in.</li>
 </ul>
-<p>In the next steps we&#39;ll look at how we handle cases where the User does not
+<p>In the next steps we&#39;ll look at how we handle cases where the user does not
 have OneTouch, or denies the login request.</p>
 </div><div data-file="Authy2FA/Providers/AuthyOneTouchProvider.cs" data-highlight="44-56" class="step"><h2 id="sending-the-onetouch-request">Sending the OneTouch Request</h2>
-<p>When our User logs in, we let the user decide which two-factor authentication
+<p>When our user logs in, we let the user decide which two-factor authentication
 provider will be used. It can be either <em>Authy One Touch</em> or <em>Authy Token</em>
 Authy OneTouch should be used when the user has a registered OneTouch
 device.</p>
@@ -95,39 +96,39 @@ scenario where we send a OneTouch request to approve a money transfer:</p>
   { <span class="cm-string">&quot;details[&#39;Currency&#39;]&quot;</span>, <span class="cm-string">&quot;Galleons&quot;</span> }
 };
 </code></pre>
-<p>Once we send the request we need to update our User&#39;s <code>AuthyStatus</code> based
+<p>Once we send the request we need to update our user&#39;s <code>AuthyStatus</code> based
 on the response.</p>
 <hr>
 <p><strong>See Also:</strong></p>
 <ul>
 <li><a href="//msdn.microsoft.com/en-us/library/system.collections.specialized.namevaluecollection.aspx">NameValueCollection Class</a></li>
 </ul>
-</div><div data-file="Authy2FA/Controllers/AuthyController.cs" data-highlight="32-47,73-77" class="step"><h2 id="configuring-the-onetouch-callback">Configuring the OneTouch Callback</h2>
+</div><div data-file="Authy2FA/Controllers/AuthyController.cs" data-highlight="32-47,73-77" class="step"><h2 id="configuring-onetouch-callback">Configuring OneTouch Callback</h2>
 <p>In order for our app to know what the User did after we sent the OneTouch
 request, we need to register a callback endpoint with Authy.</p>
 <p><img src="//howtodocs.s3.amazonaws.com/onetouch-callback-endpoint.png" alt="Authy OneTouch Callback"></p>
 <p><strong>Note:</strong> In order to verify that the request is coming from Authy, we&#39;ve
 written a helper method that will halt the request if it appears it isn&#39;t coming
 from Authy.</p>
-<p>Here in our callback, we look up the user using the <code>authy_id</code> sent with the
+<p>Here in our callback, we look the user up using the <code>authy_id</code> sent with the
 Authy POST request. Ideally at this point we would probably use a websocket
 to let our client know that we received a response from Authy. However for
 this version we&#39;re going to keep it simple and just update the
-<code>AuthyStatus</code> on the User. Then all our client-side code needs to do is
-check for <code>user.AuthyStatus == &quot;approved&quot;</code> before logging her in.</p>
+<code>AuthyStatus</code> on the user. Then all our client-side code needs to do is
+check for <code>user.AuthyStatus == &quot;approved&quot;</code> before logging him/her in.</p>
 <p>Let&#39;s take a look at the client-side code that will be handling this.</p>
 <hr>
 <p><strong>See Also:</strong></p>
 <ul>
 <li><a href="//msdn.microsoft.com/en-us/library/dn613290.aspx">UserManager&lt;TUser, TKey&gt; Class</a></li>
 </ul>
-</div><div data-file="Authy2FA/Scripts/onetouch.js" class="step"><h2 id="handle-two-factor-in-the-browser">Handle Two-Factor in the Browser</h2>
+</div><div data-file="Authy2FA/Scripts/onetouch.js" class="step"><h2 id="handling-two-factor-in-the-browser">Handling Two-Factor in the Browser</h2>
 <p>We&#39;ve already taken a look at what&#39;s happening on the server side, so let&#39;s
 step in front of the cameras now and see how our JavaScript is interacting
 with those server endpoints.</p>
 <p>When we expect a OneTouch response, we will begin polling
 <code>/Authy/OneTouchStatus</code> until we either see OneTouch login was either
-approved or denied. Let&#39;s take a  look at this controller and see what is
+approved or denied. Let&#39;s take a look at this controller and see what is
 happening.</p>
 <hr>
 <p><strong>See Also:</strong></p>
@@ -135,7 +136,7 @@ happening.</p>
 <li><a href="//api.jquery.com/jquery.post/">jQuery Post method</a></li>
 <li><a href="//api.jquery.com/submit/">jQuery submit()</a></li>
 </ul>
-</div><div data-file="Authy2FA/Controllers/AuthyController.cs" data-highlight="49-71" class="step"><h2 id="check-login-status">Check Login Status</h2>
+</div><div data-file="Authy2FA/Controllers/AuthyController.cs" data-highlight="49-71" class="step"><h2 id="checking-login-status">Checking Login Status</h2>
 <p>Here is the endpoint that our JavaScript is polling. It is waiting for the
 user status to be either <strong>approved</strong> or <strong>denied</strong>.</p>
 <hr>
@@ -144,7 +145,7 @@ user status to be either <strong>approved</strong> or <strong>denied</strong>.</
 <li><a href="//msdn.microsoft.com/en-us/library/mt173765.aspx">SignInManager&lt;TUser, TKey&gt;.GetVerifiedUserIdAsync Method ()</a></li>
 <li><a href="https://msdn.microsoft.com/en-us/library/dn497542.aspx">UserManager&lt;TUser, TKey&gt;.FindByIdAsync Method</a></li>
 </ul>
-</div><div data-file="Authy2FA/Controllers/AccountController.cs" data-highlight="150-172" class="step"><h2 id="finish-the-2fa-step">Finish the 2FA Step</h2>
+</div><div data-file="Authy2FA/Controllers/AccountController.cs" data-highlight="150-172" class="step"><h2 id="finishing-the-2fa-step">Finishing the 2FA Step</h2>
 <p>If the <code>AuthyStatus</code> is approved, then the user will be redirected to the
 home page, otherwise we&#39;ll show the <code>/Account/Login</code> form.</p>
 <hr>
@@ -153,13 +154,13 @@ home page, otherwise we&#39;ll show the <code>/Account/Login</code> form.</p>
 <li><a href="https://msdn.microsoft.com/en-us/library/mt173758.aspx">SignInManager&lt;TUser, TKey&gt;.TwoFactorSignInAsync Method</a></li>
 </ul>
 </div><div class="step"><h2 id="where-to-next-">Where to Next?</h2>
-<p>That&#39;s it! We&#39;ve just implemented two-factor auth using three different
+<p>That&#39;s it! We&#39;ve just implemented two-factor authentication using three different
 methods and the latest in Authy technology.</p>
 <p>If you&#39;re a C# developer working with Twilio, you might enjoy these
 other tutorials:</p>
 <p><a href="https://www.twilio.com/docs/howto/walkthrough/ivr-phone-tree/csharp/mvc"><strong>IVR: Phone Tree</strong></a></p>
 <p>Easily route callers to the right people and information with an IVR
-(interactive voice response) system</p>
+(interactive voice response) system.</p>
 <p><a href="//www.twilio.com/docs/howto/walkthrough/call-tracking/csharp/mvc"><strong>Call Tracking</strong></a></p>
 <p>Use Twilio to track the effectiveness of your marketing campaigns.</p>
 <h3 id="did-this-help-">Did This Help?</h3>
